@@ -1,0 +1,68 @@
+# Fichier .gitignore pour un projet Python / IA
+
+# Dossiers de cache
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# Fichiers de configuration d'IDE
+.vscode/
+.idea/
+
+# Fichiers système macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Fichiers de données (trop volumineux pour git)
+data/raw/
+data/processed/
+data/chess_decoder_1000/
+data/merged_dataset/
+data/roboflow_adapted/
+data/roboflow_dataset/
+archive/
+
+# Tous les dossiers de modèles entraînés (sauf args.yaml pour la config)
+models/*/
+!models/**/args.yaml
+!models/**/results.csv
+
+# Exclure images générées dans models/ (train_batch, labels, courbes, etc.)
+models/**/*.jpg
+models/**/*.png
+
+# Fichiers de modèles pré-entraînés YOLOv8
+*.pt
+*.pth
+*.weights
+yolov8*.pt
+
+# Fichiers ZIP de datasets
+*.zip
+roboflow_chess.zip
+
+# Images de test et prédictions
+imgTest/
+predictions/
+
+# Fichiers de logs
+*.log
+
+# Fichiers de build et de distribution
+build/
+dist/
+*.egg-info/
+
+# Notebooks Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Fichiers temporaires
+*.tmp
+*.bak
+*.swp
+*~

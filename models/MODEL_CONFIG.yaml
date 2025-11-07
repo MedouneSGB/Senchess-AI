@@ -1,0 +1,206 @@
+# ============================================
+# SENCHESS AI - Configuration des Modèles
+# ============================================
+
+models:
+  # ==========================================
+  # 🏆 SENCHESS HAKI - Le Champion Universel
+  # ==========================================
+  senchess_haki_v1.0:
+    full_name: "Senchess Haki v1.0"
+    path: "models/senchess_haki_v1.0/weights/best.pt"
+    version: "1.0"
+    base_model: "YOLOv8n"
+    
+    metrics:
+      mAP50: 99.5
+      mAP50-95: 85.3
+      precision: 98.2
+      recall: 97.8
+    
+    training:
+      epochs: 10
+      dataset: "chess_decoder_1000"
+      images: 1000
+      duration: "2.24 hours"
+      device: "CPU (Intel Core i5)"
+      batch_size: 8
+      image_size: 640
+    
+    specialization:
+      type: "2D Chess Diagrams - Generated"
+      description: "Optimisé pour diagrammes d'échecs 2D stylisés générés par ordinateur"
+      strengths:
+        - "Diagrammes d'échecs 2D générés par ordinateur"
+        - "Symboles de pièces vectoriels stylisés"
+        - "Thèmes de couleurs variés (ocean, marble, wood, etc.)"
+        - "Images synthétiques parfaitement propres"
+        - "Style Chess Decoder graphique"
+    
+    best_for:
+      - "Diagrammes d'échecs générés par Chess Decoder"
+      - "Images 2D stylisées d'échiquiers"
+      - "Graphiques d'échecs vectoriels"
+      - "Positions d'échecs en format diagramme"
+
+  # ==========================================
+  # ⚙️ SENCHESS GEAR - Le Polyvalent
+  # ==========================================
+  senchess_gear_v1.0:
+    full_name: "Senchess Gear v1.0"
+    path: "models/senchess_gear_v1.0/weights/best.pt"
+    version: "1.0"
+    base_model: "YOLOv8n"
+    
+    metrics:
+      mAP50: 98.5
+      mAP50-95: 71.2
+      precision: 95.8
+      recall: 94.3
+    
+    training:
+      epochs: 10
+      dataset: "chess_dataset (693 images)"
+      images: 693
+      duration: "11.7 hours"
+      device: "CPU (Intel Core i5)"
+      batch_size: 8
+      image_size: 640
+    
+    specialization:
+      type: "3D Physical Chess Pieces - Photos"
+      description: "Optimisé pour photos d'échiquiers physiques 3D avec pièces réelles"
+      strengths:
+        - "Photos d'échiquiers physiques 3D"
+        - "Pièces d'échecs réelles photographiées"
+        - "Conditions d'éclairage variées"
+        - "Angles de vue standards"
+        - "Textures et ombres réalistes"
+    
+    best_for:
+      - "Photos utilisateurs de parties en cours"
+      - "Captures d'échiquiers physiques réels"
+      - "Images prises avec smartphone"
+      - "Analyse de photos personnelles avec pièces 3D"
+
+# ==========================================
+# 🚀 Propositions de Nouveaux Modèles
+# ==========================================
+
+future_models:
+  # Modèle Universel (fusion des deux)
+  senchess_ultimate:
+    version: "1.0"
+    description: "Fusion de Haki + Gear - Détecte TOUS les styles"
+    dataset: "1693 images (1000 Chess Decoder + 693 Original)"
+    estimated_mAP50: "99.0%"
+    estimated_training: "3-4 hours"
+    status: "planned"
+  
+  # Modèle Optimisé (YOLOv8s - plus gros)
+  senchess_titan:
+    version: "1.0"
+    description: "Version YOLOv8s - Plus précis, plus lent"
+    model_size: "YOLOv8s (11M params vs 3M)"
+    estimated_mAP50: "99.8%"
+    speed: "2x plus lent"
+    status: "planned"
+  
+  # Modèle Rapide (YOLOv8n optimisé)
+  senchess_flash:
+    version: "1.0"
+    description: "Version ultra-rapide pour temps réel"
+    optimization: "Quantization INT8"
+    estimated_mAP50: "97.0%"
+    speed: "3x plus rapide"
+    status: "planned"
+  
+  # Modèle Fine-tuné utilisateur
+  senchess_custom:
+    version: "1.0"
+    description: "Fine-tuning sur vos propres images"
+    base_model: "senchess_haki_v1.0 ou senchess_gear_v1.0"
+    usage: "Pour adapter à votre plateforme Senchess.com"
+    status: "template"
+
+# ==========================================
+# 📊 Variables d'Entraînement Recommandées
+# ==========================================
+
+training_presets:
+  # Entraînement rapide (test)
+  quick:
+    epochs: 10
+    batch_size: 8
+    img_size: 640
+    patience: 50
+    time_estimate: "1-2 hours (CPU)"
+  
+  # Entraînement standard (recommandé)
+  standard:
+    epochs: 50
+    batch_size: 16
+    img_size: 640
+    patience: 100
+    time_estimate: "5-10 hours (CPU)"
+  
+  # Entraînement profond (maximum qualité)
+  deep:
+    epochs: 100
+    batch_size: 8
+    img_size: 640
+    patience: 50
+    time_estimate: "10-20 hours (CPU)"
+  
+  # Fine-tuning (amélioration d'un modèle existant)
+  finetune:
+    epochs: 20
+    batch_size: 8
+    img_size: 640
+    patience: 20
+    learning_rate: 0.001
+    time_estimate: "2-4 hours (CPU)"
+
+# ==========================================
+# 🎯 Stratégies d'Utilisation
+# ==========================================
+
+usage_strategies:
+  # Pour Senchess.com - Photos utilisateurs
+  user_photos:
+    recommended_model: "senchess_gear_v1.0"
+    confidence_threshold: 0.5
+    reason: "Optimisé pour photos 2D standards"
+  
+  # Pour Senchess.com - Images générées
+  generated_images:
+    recommended_model: "senchess_haki_v1.0"
+    confidence_threshold: 0.25
+    reason: "Excellente précision sur images 3D"
+  
+  # Système hybride (meilleur des deux)
+  hybrid:
+    models:
+      - "senchess_haki_v1.0"
+      - "senchess_gear_v1.0"
+    strategy: "Essayer les 2, garder le meilleur résultat"
+    confidence_threshold: 0.5
+  
+  # Futur - Modèle universel
+  universal:
+    recommended_model: "senchess_ultimate_v1.0"
+    confidence_threshold: 0.3
+    status: "À créer"
+
+# ==========================================
+# 📝 Notes de Version
+# ==========================================
+
+changelog:
+  v1.0:
+    date: "2025-11-07"
+    changes:
+      - "Création de Senchess Haki (99.5% mAP50)"
+      - "Création de Senchess Gear (98.5% mAP50)"
+      - "Système de versioning établi"
+      - "Documentation complète"

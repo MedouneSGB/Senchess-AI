@@ -1,0 +1,24 @@
+# Fichier de configuration du dataset pour YOLOv8
+
+# Chemins vers les ensembles de données (chemins absolus)
+path: /Users/macbookair/Desktop/Senchess AI/data/processed  # Dossier racine du dataset traité
+train: train/images  # Dossier des images d'entraînement (relatif à 'path')
+val: valid/images    # Dossier des images de validation (relatif à 'path')
+test: test/images    # Dossier des images de test (optionnel)
+
+# Définition des classes (IMPORTANT : l'ordre doit correspondre exactement aux annotations)
+# 13 classes : pièces d'échecs blanches et noires
+names:
+  0: bishop
+  1: black-bishop
+  2: black-king
+  3: black-knight
+  4: black-pawn
+  5: black-queen
+  6: black-rook
+  7: white-bishop
+  8: white-king
+  9: white-knight
+  10: white-pawn
+  11: white-queen
+  12: white-rook

@@ -1,0 +1,12 @@
+# Dépendances de base pour un projet de vision par ordinateur
+# Nous utiliserons un framework comme PyTorch ou TensorFlow,
+# et une bibliothèque comme Ultralytics pour YOLO.
+
+# À remplir au fur et à mesure des besoins.
+# Exemple :
+# torch
+# torchvision
+# ultralytics
+# opencv-python
+# numpy
+# matplotlib
