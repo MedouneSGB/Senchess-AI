@@ -1,0 +1,10 @@
+# Configuration du dataset d'échecs pour YOLO
+path: chess_dataset_1000
+train: images/train
+val: images/val
+test: images/test
+
+# Classes
+nc: 13  # Nombre de classes
+names: ['empty', 'white_king', 'white_queen', 'white_rook', 'white_bishop', 'white_knight', 'white_pawn',
+        'black_king', 'black_queen', 'black_rook', 'black_bishop', 'black_knight', 'black_pawn']

@@ -1,0 +1,10 @@
+# Dataset Chess Decoder - 1000 images
+path: /Users/macbookair/Desktop/Senchess AI/data/chess_decoder_1000
+train: images/train
+val: images/val
+test: images/test
+
+# Classes
+nc: 13
+names: ['empty', 'white-king', 'white-queen', 'white-rook', 'white-bishop', 'white-knight', 'white-pawn',
+        'black-king', 'black-queen', 'black-rook', 'black-bishop', 'black-knight', 'black-pawn']
