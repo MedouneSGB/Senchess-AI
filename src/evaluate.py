@@ -33,7 +33,7 @@ class SenchessEvaluator:
         Returns:
             dict: Métriques d'évaluation
         """
-        model_key = f"senchess_{model_name}"
+        model_key = f"senchess_{model_name}_v1.0"
         
         if model_key not in self.config['models']:
             raise ValueError(f"Modèle '{model_name}' non trouvé. Utilisez 'haki' ou 'gear'")
@@ -184,7 +184,7 @@ class SenchessEvaluator:
         results = {}
         
         for model_name in ['haki', 'gear']:
-            model_key = f"senchess_{model_name}"
+            model_key = f"senchess_{model_name}_v1.0"
             model_info = self.config['models'][model_key]
             model_path = self.base_dir / model_info['path']
             
