@@ -350,7 +350,16 @@ Pour contribuer au projet :
 4. Push vers la branche (`git push origin feature/amelioration`)
 5. Ouvrez une Pull Request
 
-## 📜 License
+## � Documentation Complète
+
+Pour plus de détails sur le projet :
+- **[docs/SUMMARY.md](docs/SUMMARY.md)** - Résumé exécutif du projet
+- **[docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md)** - Rapport des améliorations Court Terme
+- **[docs/CHANGELOG.md](docs/CHANGELOG.md)** - Historique des versions
+- **[docs/PROJECT_STATUS.txt](docs/PROJECT_STATUS.txt)** - Statut visuel du projet
+- **[models/MODEL_CONFIG.yaml](models/MODEL_CONFIG.yaml)** - Configuration détaillée des modèles
+
+## �📜 License
 
 Ce projet est sous licence [MIT](LICENSE).
 
