@@ -17,7 +17,7 @@ class SenchessModelManager:
     
     def _load_config(self):
         """Charge la configuration des modèles"""
-        with open(self.config_path, 'r') as f:
+        with open(self.config_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
     
     def list_models(self):
@@ -42,7 +42,7 @@ class SenchessModelManager:
         Returns:
             YOLO model object
         """
-        model_key = f"senchess_{model_name}"
+        model_key = f"senchess_{model_name}_v1.0"
         
         if model_key not in self.config['models']:
             raise ValueError(f"Modèle '{model_name}' non trouvé. Utilisez 'haki' ou 'gear'")
@@ -127,7 +127,7 @@ class SenchessModelManager:
     
     def get_model_info(self, model_name):
         """Retourne les informations d'un modèle"""
-        model_key = f"senchess_{model_name}"
+        model_key = f"senchess_{model_name}_v1.0"
         if model_key in self.config['models']:
             return self.config['models'][model_key]
         return None
