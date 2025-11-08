@@ -26,20 +26,28 @@ data/roboflow_adapted/
 data/roboflow_dataset/
 archive/
 
-# Tous les dossiers de modèles entraînés (sauf args.yaml pour la config)
-models/*/
-!models/**/args.yaml
-!models/**/results.csv
-
-# Exclure images générées dans models/ (train_batch, labels, courbes, etc.)
-models/**/*.jpg
-models/**/*.png
-
-# Fichiers de modèles pré-entraînés YOLOv8
+# Fichiers de modèles pré-entraînés YOLOv8 (AVANT les exceptions)
 *.pt
 *.pth
 *.weights
 yolov8*.pt
+
+# EXCEPTION : Autoriser les modèles de production Senchess AI
+!models/senchess_haki_v1.0/weights/best.pt
+!models/senchess_gear_v1.0/weights/best.pt
+
+# Tous les dossiers de modèles entraînés (sauf args.yaml pour la config)
+models/*/
+!models/**/args.yaml
+!models/**/results.csv
+!models/senchess_haki_v1.0/
+!models/senchess_gear_v1.0/
+!models/senchess_haki_v1.0/weights/
+!models/senchess_gear_v1.0/weights/
+
+# Exclure images générées dans models/ (train_batch, labels, courbes, etc.)
+models/**/*.jpg
+models/**/*.png
 
 # Fichiers ZIP de datasets
 *.zip
