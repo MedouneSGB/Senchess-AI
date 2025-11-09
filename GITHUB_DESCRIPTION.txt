@@ -1,0 +1,59 @@
+# Description GitHub pour Senchess-AI
+
+## Description Courte (160 caractères max)
+🔍♟️ YOLOv8 chess piece detection with 99.5% accuracy. Intel GPU accelerated (6x speedup via OpenVINO). Production-ready models for 2D diagrams & 3D photos.
+
+## Description Moyenne (300 caractères)
+🔍♟️ Advanced chess piece detection using YOLOv8 with 99.5% mAP50 accuracy. Features dual specialized models (Haki for 2D diagrams, Gear for physical boards), Intel Iris Xe GPU acceleration via OpenVINO (6x speedup to 103 FPS), and optimized CPU training. Production-ready for Senchess.com integration.
+
+## Description Complète (Pour README GitHub)
+🔍♟️ **Senchess AI** - Production-ready chess piece detection powered by YOLOv8
+
+**Key Features:**
+- 🥇 **99.5% accuracy** on 2D chess diagrams (Haki model)
+- 🥈 **98.5% accuracy** on physical chess boards (Gear model)
+- 🚀 **6x faster inference** with Intel Iris Xe GPU (103 FPS via OpenVINO)
+- ⚡ **Optimized Intel CPU training** with MKL (45 min/10 epochs)
+- 📦 **1693 images** across 13 classes (12 pieces + empty)
+- 🎯 **Dual specialized models** for different use cases
+- 🛠️ **Complete toolkit** with training, inference, and benchmarking scripts
+
+**Tech Stack:** YOLOv8 • PyTorch 2.9 • OpenVINO 2025.3 • Intel MKL • Python 3.13
+
+**Use Cases:** Chess.com integration • Real-time position recognition • Chess education platforms • Game analysis tools
+
+## Topics/Tags GitHub
+chess
+chess-detection
+yolov8
+computer-vision
+deep-learning
+object-detection
+pytorch
+openvino
+intel-gpu
+machine-learning
+chess-ai
+ultralytics
+chess-pieces
+image-recognition
+gpu-acceleration
+
+## Social Preview Description (280 caractères)
+Advanced chess piece detection with YOLOv8. 99.5% accuracy, Intel GPU accelerated (6x speedup), dual specialized models for 2D diagrams and physical boards. Production-ready with complete training and inference toolkit. Built for Senchess.com.
+
+## Pitch Elevator (30 secondes)
+Senchess AI détecte les pièces d'échecs avec 99.5% de précision grâce à YOLOv8. 
+Deux modèles spécialisés : Haki pour diagrammes 2D, Gear pour photos réelles.
+Accélération GPU Intel 6x plus rapide (103 FPS) via OpenVINO.
+Entraînement optimisé sur CPU Intel en 45 minutes.
+Prêt pour la production et l'intégration dans Senchess.com.
+
+## Statut Badges Recommandés
+[![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.9-red.svg)](https://pytorch.org/)
+[![OpenVINO](https://img.shields.io/badge/OpenVINO-2025.3-purple.svg)](https://docs.openvino.ai/)
+[![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-00FFFF.svg)](https://github.com/ultralytics/ultralytics)
+[![mAP50](https://img.shields.io/badge/mAP50-99.5%25-brightgreen.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Intel GPU](https://img.shields.io/badge/Intel%20GPU-6x%20Speedup-0071C5.svg)]()
