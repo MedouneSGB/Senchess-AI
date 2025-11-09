@@ -1,12 +1,22 @@
 # Dépendances de base pour un projet de vision par ordinateur
-# Nous utiliserons un framework comme PyTorch ou TensorFlow,
-# et une bibliothèque comme Ultralytics pour YOLO.
+# Support GPU avec PyTorch et CUDA
 
-# À remplir au fur et à mesure des besoins.
-# Exemple :
-# torch
-# torchvision
-# ultralytics
-# opencv-python
-# numpy
-# matplotlib
+# PyTorch avec support CUDA (GPU)
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+
+# YOLO et Computer Vision
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+
+# Data Science
+numpy>=1.24.0
+pandas>=2.0.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Utilitaires
+pyyaml>=6.0
+pillow>=10.0.0
+tqdm>=4.65.0

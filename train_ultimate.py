@@ -8,6 +8,7 @@ from pathlib import Path
 from ultralytics import YOLO
 from datetime import datetime
 import yaml
+import torch
 
 def train_ultimate_model():
     """Entraîne le modèle Senchess Ultimate v1.0"""
@@ -23,17 +24,29 @@ def train_ultimate_model():
         print("   Exécutez d'abord : python create_ultimate_dataset.py")
         return
     
+    # Détecter le device (GPU ou CPU)
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "N/A"
+    
+    print(f"🖥️  Device détecté : {device.upper()}")
+    if device == 'cuda':
+        print(f"   GPU : {gpu_name}")
+        print(f"   CUDA Version : {torch.version.cuda}")
+    else:
+        print("   ⚠️  Aucun GPU détecté, utilisation du CPU")
+    print()
+    
     # Configuration de l'entraînement
     config = {
         'model': 'yolov8n.pt',  # Modèle de base
         'data': str(dataset_path / 'data.yaml'),
         'epochs': 50,  # Plus d'époques pour un meilleur apprentissage
-        'batch': 8,
+        'batch': 16 if device == 'cuda' else 8,  # Batch plus grand avec GPU
         'imgsz': 640,
         'patience': 100,
         'project': 'models',
         'name': 'senchess_ultimate_v1.0',
-        'device': 'cpu',  # Changez en 'cuda' si vous avez un GPU
+        'device': device,  # Utilisation automatique du GPU si disponible
         'workers': 8,
         'optimizer': 'auto',
         'lr0': 0.01,
@@ -60,7 +73,8 @@ def train_ultimate_model():
     print()
     
     # Demander confirmation
-    print("⏱️  Temps estimé d'entraînement : 8-15 heures (CPU) / 1-2 heures (GPU)")
+    estimated_time = "8-15 heures (CPU) / 30-90 minutes (GPU)" if device == 'cpu' else "30-90 minutes avec GPU"
+    print(f"⏱️  Temps estimé d'entraînement : {estimated_time}")
     print()
     response = input("Voulez-vous commencer l'entraînement ? (o/n): ")
     
@@ -162,6 +176,13 @@ def quick_train():
         print("   Exécutez d'abord : python create_ultimate_dataset.py")
         return
     
+    # Détecter le device (GPU ou CPU)
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(f"🖥️  Device : {device.upper()}")
+    if device == 'cuda':
+        print(f"   GPU : {torch.cuda.get_device_name(0)}")
+    print()
+    
     model = YOLO('yolov8n.pt')
     
     print("🏋️  Entraînement rapide (10 epochs)...\n")
@@ -169,11 +190,11 @@ def quick_train():
     results = model.train(
         data=str(dataset_path / 'data.yaml'),
         epochs=10,
-        batch=8,
+        batch=16 if device == 'cuda' else 8,
         imgsz=640,
         project='models',
         name='senchess_ultimate_v1.0_quick',
-        device='cpu',
+        device=device,
         workers=8,
         verbose=True
     )
