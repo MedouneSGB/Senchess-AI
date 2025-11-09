@@ -19,12 +19,14 @@ env/
 
 # Fichiers de données (trop volumineux pour git)
 data/raw/
-data/processed/
-data/chess_decoder_1000/
 data/merged_dataset/
 data/roboflow_adapted/
 data/roboflow_dataset/
 archive/
+
+# EXCEPTION : Autoriser les datasets de production
+!data/processed/
+!data/chess_decoder_1000/
 
 # Fichiers de modèles pré-entraînés YOLOv8 (AVANT les exceptions)
 *.pt
