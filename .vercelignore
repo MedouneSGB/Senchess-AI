@@ -1,0 +1,44 @@
+# Vercel deployment
+.vercel
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# Models (too large for git/vercel)
+models/
+*.pt
+*.pth
+*.onnx
+
+# Data
+data/
+archive/
+runs/
+predictions/
+imgTest/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp

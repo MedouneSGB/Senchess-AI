@@ -79,3 +79,25 @@ dist/
 *.bak
 *.swp
 *~
+
+# ====================================
+# API ET DÉPLOIEMENT VERCEL
+# ====================================
+
+# Vercel
+.vercel
+
+# Variables d'environnement (NE PAS COMMITER)
+.env
+.env.local
+.env.production
+
+# Logs API
+api/*.log
+
+# Cache Hugging Face
+.cache/
+/tmp/models/
+
+# Test files
+test_output/

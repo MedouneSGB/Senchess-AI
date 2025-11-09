@@ -11,9 +11,44 @@ Nous avons entraîné **2 modèles de production** spécialisés :
 | **🥇 Senchess Haki v1.0** | 99.5% | Diagrammes 2D générés | Images Chess Decoder, graphiques stylisés |
 | **🥈 Senchess Gear v1.0** | 98.5% | Photos physiques 3D | Photos smartphone d'échiquiers réels |
 
-## 📋 Table des Matières
+## � API REST Déployable
+
+**Nouveau !** Une API Flask complète pour déployer vos modèles sur Vercel et les utiliser dans vos applications web.
+
+### Démarrage rapide
+
+```bash
+# 1. Uploader vos modèles sur Hugging Face
+pip install huggingface_hub
+python upload_models_to_huggingface.py
+
+# 2. Déployer sur Vercel
+npm i -g vercel
+vercel --prod
+```
+
+### Utilisation
+
+```typescript
+// Dans votre application web
+import { analyzeChessBoardImage } from './chessImageRecognition';
+
+const result = await analyzeChessBoardImage(imageUrl);
+console.log('FEN:', result.fen);  // Position en notation FEN
+console.log('Pièces:', result.detectedPieces);  // Nombre de pièces détectées
+```
+
+**📚 Documentation complète :**
+- [`QUICK_START.md`](QUICK_START.md) - Guide de déploiement express (5 étapes)
+- [`HUGGINGFACE_GUIDE.md`](HUGGINGFACE_GUIDE.md) - Upload des modèles sur Hugging Face
+- [`DEPLOYMENT.md`](DEPLOYMENT.md) - Guide de déploiement complet
+- [`COMMANDS.md`](COMMANDS.md) - Toutes les commandes utiles
+- [`api/README.md`](api/README.md) - Documentation de l'API
+
+## �📋 Table des Matières
 
 - [Modèles Disponibles](#-modèles-disponibles)
+- [API REST Déployable](#-api-rest-déployable)
 - [Structure du Projet](#structure-du-projet)
 - [Technologies Utilisées](#technologies-utilisées)
 - [Installation](#installation)
