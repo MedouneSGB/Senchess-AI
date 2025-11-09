@@ -36,49 +36,91 @@ Senchess AI/
 │   │   ├── train/                  # Ensemble d'entraînement (485 images)
 │   │   ├── valid/                  # Ensemble de validation (58 images)
 │   │   └── test/                   # Ensemble de test (150 images)
+│   ├── chess_dataset_1000/         # Dataset 13 classes (1000 images)
+│   │   ├── images/train/val/test/  # Images organisées
+│   │   └── labels/train/val/test/  # Annotations YOLO
 │   ├── chess_decoder_1000/         # Dataset Haki (1000 images - diagrammes 2D)
-│   │   ├── images/
-│   │   │   ├── train/              # 700 images
-│   │   │   ├── val/                # 200 images
-│   │   │   └── test/               # 100 images
-│   │   └── labels/
-│   └── chess_dataset.yaml          # Configuration dataset Gear
-├── src/                            # Code source
+│   │   ├── images/train/val/test/
+│   │   └── labels/train/val/test/
+│   └── chess_ultimate_1693/        # Dataset ultimate (combiné)
+│       ├── train/images/labels/
+│       ├── valid/images/labels/
+│       └── test/images/labels/
+├── scripts/                        # 🆕 Scripts organisés
+│   ├── training/                   # Scripts d'entraînement
+│   │   ├── train_intel.py          # ⭐ Production (optimisé CPU Intel)
+│   │   ├── train_ultimate.py       # Entraînement ultimate dataset
+│   │   ├── train_new_model.py      # Nouveau modèle 13 classes
+│   │   └── ensemble_model.py       # Modèle ensemble
+│   ├── inference/                  # Scripts d'inférence
+│   │   ├── export_openvino.py      # Export vers OpenVINO
+│   │   ├── benchmark_openvino_fixed.py  # 🚀 Benchmark GPU (6x speedup!)
+│   │   ├── test_models.py          # Tests de validation
+│   │   └── analyze_image.py        # Analyse d'images
+│   ├── utils/                      # Utilitaires
+│   │   ├── check_devices.py        # Vérifier devices OpenVINO
+│   │   ├── check_gpu_intel.py      # Détecter GPU Intel
+│   │   ├── compare_all_models.py   # Comparer modèles
+│   │   └── view_results.py         # Visualiser résultats
+│   └── experiments/                # 🧪 Code expérimental
+│       ├── experiment_ipex.py      # Tests IPEX (échoué)
+│       └── downgrade_pytorch.py    # Gestion versions PyTorch
+├── src/                            # Code source original
 │   ├── train.py                    # Script d'entraînement du modèle
 │   ├── predict.py                  # Script d'inférence simple
-│   ├── model_manager.py            # 🆕 Gestionnaire de modèles professionnel
-│   ├── evaluate.py                 # 🆕 Évaluation et comparaison
-│   ├── adapt_roboflow_dataset.py   # Détection automatique des couleurs
-│   ├── merge_datasets.py           # Fusion de datasets YOLO
-│   └── prepare_data.py             # Préparation des données
+│   ├── model_manager.py            # Gestionnaire de modèles professionnel
+│   ├── evaluate.py                 # Évaluation et comparaison
+│   └── ...                         # Autres utilitaires
 ├── models/                         # Modèles entraînés
 │   ├── senchess_haki_v1.0/         # 🥇 Meilleur modèle (99.5% mAP50)
-│   │   └── weights/
-│   │       └── best.pt             # 6.0MB - Diagrammes 2D
+│   │   └── weights/best.pt         # 6.0MB - Diagrammes 2D
 │   ├── senchess_gear_v1.0/         # 🥈 Second modèle (98.5% mAP50)
-│   │   └── weights/
-│   │       └── best.pt             # 6.0MB - Photos physiques
-│   └── MODEL_CONFIG.yaml           # Configuration complète des modèles
+│   │   └── weights/best.pt         # 6.0MB - Photos physiques
+│   ├── senchess_intel_v1.0_quick<N>/  # Modèles Intel CPU
+│   │   └── weights/best.pt         # Entraînés avec train_intel.py
+│   └── MODEL_CONFIG.yaml           # Configuration complète
+├── docs/                           # Documentation
+│   ├── OPENVINO_SUCCESS.md         # 🚀 Guide OpenVINO GPU (6x speedup)
+│   ├── GPU_INTEL_CONCLUSION.md     # Leçons IPEX vs OpenVINO
+│   └── ...                         # Autres docs
 ├── predictions/                    # Résultats des prédictions
-├── imgTest/                        # Images de test
 ├── requirements.txt                # Dépendances Python
-├── .gitignore                      # Fichiers à ignorer
 └── README.md                       # Ce fichier
 ```
 
 ## 🛠️ Technologies Utilisées
 
 - **YOLOv8** (Ultralytics) - Architecture de détection d'objets state-of-the-art
-- **PyTorch** - Framework de deep learning
+- **PyTorch 2.9** - Framework de deep learning
+- **OpenVINO 2025.3** - Accélération GPU Intel (6x speedup!)
+- **Intel MKL** - Optimisations CPU pour training
 - **OpenCV** - Traitement d'images
-- **Python 3.9+** - Langage de programmation
+- **Python 3.13** - Langage de programmation
+
+### 🚀 Optimisations GPU Intel
+
+Ce projet inclut maintenant un support complet pour **Intel Iris Xe Graphics** :
+
+- ✅ **Training optimisé CPU** avec Intel MKL (`scripts/training/train_intel.py`)
+- ✅ **Inference GPU accélérée** avec OpenVINO (6x plus rapide!)
+- ✅ **Benchmarks complets** PyTorch vs OpenVINO CPU vs GPU
+- ❌ **IPEX non recommandé** (setup complexe, drivers manquants)
+
+**Performances Intel Iris Xe:**
+- PyTorch CPU: 58ms/image (17 FPS)
+- OpenVINO CPU: 26ms/image (39 FPS) - 2.26x speedup
+- **OpenVINO GPU: 10ms/image (103 FPS) - 6x speedup!** 🚀
+
+Voir `docs/OPENVINO_SUCCESS.md` pour le guide complet.
 
 ## 💻 Installation
 
 ### Prérequis
 
-- Python 3.9 à 3.11 (Python 3.13 n'est pas encore compatible avec PyTorch)
+- Python 3.13+ (ou 3.9-3.12)
 - pip
+- Intel CPU (recommandé pour optimisations MKL)
+- Intel Iris Xe ou GPU Intel (optionnel, pour accélération OpenVINO)
 
 ### Étapes d'installation
 
@@ -126,7 +168,38 @@ results = manager.predict('gear', 'photo_echiquier.jpg')
 comparison = manager.compare_models('test_image.jpg')
 ```
 
-### En Ligne de Commande
+### 🚀 Nouveaux Scripts Organisés
+
+```bash
+# === TRAINING ===
+# Entraînement rapide optimisé Intel CPU (10 epochs)
+python scripts/training/train_intel.py --quick
+
+# Entraînement complet (100 epochs)
+python scripts/training/train_intel.py --full
+
+# === INFERENCE ===
+# Export modèle vers OpenVINO
+python scripts/inference/export_openvino.py
+
+# Benchmark performances (PyTorch vs OpenVINO CPU/GPU)
+python scripts/inference/benchmark_openvino_fixed.py
+
+# Test modèles
+python scripts/inference/test_models.py
+
+# === UTILS ===
+# Vérifier devices OpenVINO disponibles
+python scripts/utils/check_devices.py
+
+# Comparer tous les modèles
+python scripts/utils/compare_all_models.py
+
+# Visualiser résultats training
+python scripts/utils/view_results.py
+```
+
+### En Ligne de Commande (API originale)
 
 ```bash
 # Lister les modèles disponibles
@@ -318,7 +391,9 @@ print(f"Haki: {comparison['haki']['detections']} détections")
 
 - [ ] Créer Senchess Ultimate (fusion 1693 images pour modèle universel)
 - [ ] Intégration avec l'API REST de Senchess.com
-- [ ] Support de la détection en temps réel (vidéo)
+- [ ] Support de la détection en temps réel (vidéo) avec OpenVINO GPU
+- [x] ✅ Optimisations GPU Intel (OpenVINO 6x speedup)
+- [x] ✅ Organisation du code en modules logiques
 - [ ] Tests unitaires et CI/CD
 - [ ] Export du modèle pour déploiement mobile (ONNX, TFLite)
 - [ ] Dashboard de monitoring en production
@@ -326,9 +401,34 @@ print(f"Haki: {comparison['haki']['detections']} détections")
 ## 📝 Notes Techniques
 
 ### CPU vs GPU
-- **Entraînement sur CPU** : Possible mais lent (1-2h par 10 époques sur 1000 images)
-- **GPU recommandé** : NVIDIA avec CUDA pour accélération 10-20x
-- **Alternative** : Google Colab avec GPU gratuit
+
+#### Training
+- **CPU Intel avec MKL** : Production-ready (scripts/training/train_intel.py)
+  - Epoch ~5 min sur 1000 images
+  - 10 epochs ~45 min
+  - 100 epochs ~7.5h
+- **GPU NVIDIA avec CUDA** : Recommandé pour training (10-20x plus rapide)
+- **Intel Iris Xe GPU** : Non recommandé pour training (trop faible)
+- **Alternative gratuite** : Google Colab avec GPU
+
+#### Inference
+- **PyTorch CPU** : 58ms/image (17 FPS) - Baseline
+- **OpenVINO CPU** : 26ms/image (39 FPS) - 2.26x speedup
+- **OpenVINO GPU Intel Iris Xe** : 10ms/image (103 FPS) - **6x speedup!** ✅
+- **PyTorch CUDA** : Très rapide si GPU NVIDIA disponible
+
+### Technologies GPU Intel
+
+| Solution | Training | Inference | Statut | Recommandation |
+|----------|----------|-----------|--------|----------------|
+| **OpenVINO** | ❌ Non | ✅ 6x speedup | ✅ Production | **Utilisez ceci!** |
+| **IPEX** | ✅ Oui | ✅ Oui | ❌ Échoué | Évitez (drivers manquants) |
+| **Intel MKL** | ✅ Oui | ✅ Oui | ✅ Production | Inclus dans PyTorch |
+
+**Voir documentation complète:**
+- `docs/OPENVINO_SUCCESS.md` - Guide OpenVINO GPU
+- `docs/GPU_INTEL_CONCLUSION.md` - Pourquoi IPEX a échoué
+- `scripts/README.md` - Organisation des scripts
 
 ### Taille des Modèles
 - **YOLOv8n** (nano) : 6MB, 3M paramètres, le plus rapide
@@ -340,6 +440,7 @@ print(f"Haki: {comparison['haki']['detections']} détections")
 - **Data augmentation** : Rotation, flip, changement luminosité
 - **Fine-tuning** : Partir d'un modèle pré-entraîné
 - **Ensemble** : Combiner plusieurs modèles
+- **OpenVINO** : Export pour accélération GPU Intel
 
 ## 🤝 Contribution
 
