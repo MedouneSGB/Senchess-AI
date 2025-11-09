@@ -26,6 +26,10 @@ data/roboflow_adapted/
 data/roboflow_dataset/
 archive/
 
+# EXCEPTION : Autoriser chess_dataset_1000 pour Colab
+!data/chess_dataset_1000/
+!data/chess_dataset_1000/**
+
 # Fichiers de modèles pré-entraînés YOLOv8 (AVANT les exceptions)
 *.pt
 *.pth
@@ -56,7 +60,8 @@ roboflow_chess.zip
 # Images de test et prédictions
 imgTest/
 predictions/
-data/
+# Autoriser data/chess_dataset_1000 pour Colab
+# data/
 
 # Fichiers de logs
 *.log
@@ -68,7 +73,9 @@ dist/
 
 # Notebooks Jupyter
 .ipynb_checkpoints/
-*.ipynb
+# Autoriser le notebook Colab
+# *.ipynb
+!notebooks/train_on_colab.ipynb
 
 # Fichiers temporaires
 *.tmp
