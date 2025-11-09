@@ -2,6 +2,17 @@
 
 Ce projet contient le code et les ressources pour entraîner un modèle de vision par ordinateur capable de détecter la position des pièces sur un échiquier à partir d'une image. Ce modèle est conçu pour être intégré à **Senchess.com**, une plateforme d'échecs en ligne avec des fonctionnalités d'IA avancées.
 
+## 🚀 Entraînement sur Google Colab (GPU Gratuit)
+
+**Nouveau !** Entraînez vos modèles sur GPU gratuitement avec Google Colab :
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MedouneSGB/Senchess-AI/blob/gpu-cloud-training/notebooks/train_on_colab.ipynb)
+
+- 🎯 **Notebook prêt à l'emploi** avec GPU T4 gratuit
+- 📦 **Dataset inclus** : chess_dataset_1000 (1000 images)
+- ⚡ **10-100x plus rapide** qu'un CPU local
+- 📚 [Guide complet d'utilisation](notebooks/README.md)
+
 ## 🎯 Modèles Disponibles
 
 Nous avons entraîné **2 modèles de production** spécialisés :
