@@ -129,6 +129,30 @@
             margin: 20px 0;
             font-family: 'Courier New', monospace;
             font-size: 1.1em;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .copy-btn.copied {
+            background: #28a745;
         }
 
         .stats {
@@ -245,10 +269,14 @@
         </div>
 
         <div class="model-selector">
-            <button class="model-btn active" data-model="ensemble">🎯 Ensemble</button>
-            <button class="model-btn" data-model="gear">⚙️ Gear v1.1</button>
             <button class="model-btn" data-model="haki">⚡ Haki v1.0</button>
+            <button class="model-btn" data-model="gear">⚙️ Gear v1.1</button>
+            <button class="model-btn active" data-model="ensemble">🎯 Ensemble</button>
         </div>
+
+        <p id="modelHint" style="text-align: center; color: #666; margin-top: 10px; font-style: italic; display: none;">
+            💡 Cliquez sur un autre modèle pour comparer les résultats
+        </p>
 
         <div class="preview-section" id="previewSection">
             <h3>Aperçu de l'image</h3>
@@ -266,6 +294,7 @@
             <h2 class="success">✅ Analyse terminée !</h2>
             
             <div class="fen-box">
+                <button class="copy-btn" id="copyBtn" onclick="copyFEN()">📋 Copier</button>
                 <strong>Notation FEN:</strong><br>
                 <span id="fenResult"></span>
             </div>
@@ -304,6 +333,7 @@
     <script>
         const API_URL = 'https://senchess-api-929629832495.us-central1.run.app';
         let selectedModel = 'ensemble';
+        let currentFile = null;
 
         // Gestion de la sélection du modèle
         document.querySelectorAll('.model-btn').forEach(btn => {
@@ -311,6 +341,11 @@
                 document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 selectedModel = this.dataset.model;
+                
+                // Si une image a déjà été uploadée, relancer l'analyse avec le nouveau modèle
+                if (currentFile) {
+                    analyzeImage(currentFile);
+                }
             });
         });
 
@@ -318,6 +353,9 @@
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
+
+            // Sauvegarder le fichier pour pouvoir le réutiliser
+            currentFile = file;
 
             // Afficher l'aperçu
             const reader = new FileReader();
@@ -364,6 +402,9 @@
         function displayResults(data) {
             // Afficher la section des résultats
             document.getElementById('results').style.display = 'block';
+            
+            // Afficher l'indication pour changer de modèle
+            document.getElementById('modelHint').style.display = 'block';
 
             // FEN
             document.getElementById('fenResult').textContent = data.fen;
@@ -372,8 +413,21 @@
             document.getElementById('piecesCount').textContent = data.detectedPieces;
             document.getElementById('confidence').textContent = 
                 (data.confidence * 100).toFixed(1) + '%';
-            document.getElementById('modelUsed').textContent = 
-                data.model_used.toUpperCase();
+            
+            // Afficher le modèle utilisé avec l'emoji correspondant
+            const modelEmojis = {
+                'ensemble': '🎯',
+                'gear': '⚙️',
+                'haki': '⚡'
+            };
+            const modelNames = {
+                'ensemble': 'Ensemble',
+                'gear': 'Gear',
+                'haki': 'Haki'
+            };
+            const emoji = modelEmojis[data.model_used.toLowerCase()] || '🤖';
+            const modelName = modelNames[data.model_used.toLowerCase()] || data.model_used;
+            document.getElementById('modelUsed').innerHTML = `${emoji}<br><span style="font-size: 0.6em;">${modelName}</span>`;
 
             // Liste des pièces
             const piecesList = document.getElementById('piecesList');
@@ -417,6 +471,30 @@
                 'black-pawn': '♟'
             };
             return emojis[className] || '♟';
+        }
+
+        // Fonction pour copier le FEN
+        function copyFEN() {
+            const fenText = document.getElementById('fenResult').textContent;
+            const copyBtn = document.getElementById('copyBtn');
+            
+            navigator.clipboard.writeText(fenText).then(() => {
+                // Changer le texte et la couleur du bouton
+                copyBtn.textContent = '✅ Copié!';
+                copyBtn.classList.add('copied');
+                
+                // Revenir à l'état normal après 2 secondes
+                setTimeout(() => {
+                    copyBtn.textContent = '📋 Copier';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Erreur de copie:', err);
+                copyBtn.textContent = '❌ Erreur';
+                setTimeout(() => {
+                    copyBtn.textContent = '📋 Copier';
+                }, 2000);
+            });
         }
 
         // Vérifier l'état de l'API au chargement
