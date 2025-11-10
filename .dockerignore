@@ -1,0 +1,40 @@
+.git/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Data et modèles (trop volumineux)
+models/
+data/
+archive/
+runs/
+predictions/
+imgTest/
+
+# Notebooks
+notebooks/
+*.ipynb
+
+# Documentation
+docs/
+
+# Scripts
+scripts/
+
+# Fichiers de configuration locale
+.env
+.env.local
+.DS_Store
+
+# Vercel
+.vercel/
+vercel.json
+.vercelignore

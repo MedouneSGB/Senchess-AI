@@ -1,6 +1,7 @@
 # Core dependencies
 flask==2.3.3
 flask-cors==4.0.0
+gunicorn==21.2.0
 
 # Computer Vision & ML
 ultralytics==8.0.196
@@ -8,11 +9,11 @@ opencv-python-headless==4.8.1.78
 numpy==1.24.3
 Pillow==10.0.0
 
-# PyTorch (CPU version pour Vercel)
+# PyTorch
 torch==2.0.1
 torchvision==0.15.2
 
-# Hugging Face Hub pour télécharger les modèles
+# Hugging Face Hub
 huggingface_hub==0.17.3
 
 # Utilities

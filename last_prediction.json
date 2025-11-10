@@ -1,0 +1,132 @@
+{
+    "confidence": 0.827,
+    "description": "Position d\u00e9tect\u00e9e avec 9 pi\u00e8ces",
+    "detectedPieces": 9,
+    "fen": "8/4r3/3Pp3/2K5/5k2/2P5/8/8 w KQkq - 0 1",
+    "imageSize": {
+        "height": 416,
+        "width": 416
+    },
+    "model_used": "ensemble",
+    "pieces": [
+        {
+            "bbox": {
+                "height": 33.5,
+                "width": 29.87,
+                "x1": 197.84,
+                "x2": 227.7,
+                "y1": 102.1,
+                "y2": 135.6
+            },
+            "class": "black-bishop",
+            "confidence": 0.613,
+            "id": 1
+        },
+        {
+            "bbox": {
+                "height": 33.32,
+                "width": 30.19,
+                "x1": 164.45,
+                "x2": 194.64,
+                "y1": 102.52,
+                "y2": 135.84
+            },
+            "class": "black-bishop",
+            "confidence": 0.283,
+            "id": 2
+        },
+        {
+            "bbox": {
+                "height": 74.33,
+                "width": 28.5,
+                "x1": 231.77,
+                "x2": 260.27,
+                "y1": 98.39,
+                "y2": 172.72
+            },
+            "class": "black-queen",
+            "confidence": 0.958,
+            "id": 3
+        },
+        {
+            "bbox": {
+                "height": 82.62,
+                "width": 30.78,
+                "x1": 130.6,
+                "x2": 161.38,
+                "y1": 129.14,
+                "y2": 211.76
+            },
+            "class": "white-king",
+            "confidence": 0.957,
+            "id": 4
+        },
+        {
+            "bbox": {
+                "height": 48.18,
+                "width": 25.37,
+                "x1": 92.62,
+                "x2": 117.99,
+                "y1": 254.42,
+                "y2": 302.6
+            },
+            "class": "white-pawn",
+            "confidence": 0.954,
+            "id": 5
+        },
+        {
+            "bbox": {
+                "height": 44.44,
+                "width": 21.39,
+                "x1": 201.87,
+                "x2": 223.25,
+                "y1": 118.0,
+                "y2": 162.44
+            },
+            "class": "black-pawn",
+            "confidence": 0.936,
+            "id": 6
+        },
+        {
+            "bbox": {
+                "height": 53.69,
+                "width": 24.66,
+                "x1": 198.5,
+                "x2": 223.16,
+                "y1": 49.23,
+                "y2": 102.91
+            },
+            "class": "black-rook",
+            "confidence": 0.926,
+            "id": 7
+        },
+        {
+            "bbox": {
+                "height": 83.11,
+                "width": 33.16,
+                "x1": 243.54,
+                "x2": 276.7,
+                "y1": 171.45,
+                "y2": 254.57
+            },
+            "class": "black-king",
+            "confidence": 0.918,
+            "id": 8
+        },
+        {
+            "bbox": {
+                "height": 45.38,
+                "width": 21.18,
+                "x1": 168.01,
+                "x2": 189.19,
+                "y1": 118.8,
+                "y2": 164.17
+            },
+            "class": "white-pawn",
+            "confidence": 0.898,
+            "id": 9
+        }
+    ],
+    "success": true,
+    "warnings": []
+}
