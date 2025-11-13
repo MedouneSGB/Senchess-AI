@@ -303,8 +303,8 @@ def predict():
         # Choisir le modèle à utiliser
         detections = []
         
-        if requested_model == 'ensemble' and model_gear and model_haki:
-            # Mode ensemble : utiliser les deux modèles
+        if requested_model == 'ensemble' and (model_gear or model_haki or model_yonko):
+            # Mode ensemble : utiliser tous les modèles disponibles
             detections = predict_ensemble(tmp_path, conf_threshold)
         elif requested_model == 'yonko' and model_yonko:
             # Utiliser Yonko
@@ -402,9 +402,10 @@ def predict_with_model(model, image_path, conf_threshold):
 
 def predict_ensemble(image_path, conf_threshold):
     """
-    Prédiction ensemble combinant Gear et Haki
-    - Gear pour toutes les pièces
-    - Haki pour les pièces stratégiques (King, Queen, Rook, Bishop) avec priorité
+    Prédiction ensemble combinant Gear, Haki et Yonko
+    - Yonko: Robuste pour toutes les pièces (priorité si disponible)
+    - Gear: Précis pour toutes les pièces
+    - Haki: Spécialisé pour les pièces stratégiques (King, Queen, Rook, Bishop)
     """
     strategic_pieces = [
         'king', 'queen', 'rook', 'bishop',
@@ -412,18 +413,28 @@ def predict_ensemble(image_path, conf_threshold):
         'white-king', 'white-queen', 'white-rook', 'white-bishop'
     ]
     
-    # 1. Prédictions Gear (toutes les pièces)
-    gear_detections = predict_with_model(model_gear, image_path, conf_threshold)
+    all_detections = []
     
-    # 2. Prédictions Haki (pièces stratégiques)
-    haki_detections = predict_with_model(model_haki, image_path, conf_threshold)
+    # 1. Prédictions Yonko (si disponible - modèle le plus robuste)
+    if model_yonko:
+        yonko_detections = predict_with_model(model_yonko, image_path, conf_threshold)
+        all_detections.append(('yonko', yonko_detections))
     
-    # 3. Combiner intelligemment
+    # 2. Prédictions Gear (toutes les pièces)
+    if model_gear:
+        gear_detections = predict_with_model(model_gear, image_path, conf_threshold)
+        all_detections.append(('gear', gear_detections))
+    
+    # 3. Prédictions Haki (pièces stratégiques)
+    if model_haki:
+        haki_detections = predict_with_model(model_haki, image_path, conf_threshold)
+        all_detections.append(('haki', haki_detections))
+    
+    # 4. Combiner intelligemment avec NMS (Non-Maximum Suppression)
     final_detections = []
-    used_positions = []
     
     def boxes_overlap(box1, box2, threshold=0.5):
-        """Vérifie si deux boîtes se chevauchent"""
+        """Vérifie si deux boîtes se chevauchent (IoU)"""
         x1_min, y1_min = box1['x1'], box1['y1']
         x1_max, y1_max = box1['x2'], box1['y2']
         x2_min, y2_min = box2['x1'], box2['y1']
@@ -441,22 +452,33 @@ def predict_ensemble(image_path, conf_threshold):
         
         return intersection / union > threshold if union > 0 else False
     
-    # Prioriser les détections Haki pour les pièces stratégiques
-    for haki_det in haki_detections:
-        if haki_det['class'].lower() in strategic_pieces:
-            final_detections.append(haki_det)
-            used_positions.append(haki_det['bbox'])
+    # Fusionner les détections de tous les modèles
+    all_dets = []
+    for model_name, detections in all_detections:
+        for det in detections:
+            det['source_model'] = model_name
+            all_dets.append(det)
     
-    # Ajouter les détections Gear non chevauchantes
-    for gear_det in gear_detections:
+    # Trier par confiance décroissante
+    all_dets.sort(key=lambda x: x['confidence'], reverse=True)
+    
+    # NMS: garder les détections les plus confiantes et supprimer les chevauchements
+    used_positions = []
+    for det in all_dets:
         overlaps = False
-        for used_pos in used_positions:
-            if boxes_overlap(gear_det['bbox'], used_pos):
+        for used_det in final_detections:
+            if boxes_overlap(det['bbox'], used_det['bbox'], threshold=0.3):
                 overlaps = True
+                # Si c'est Haki et c'est une pièce stratégique, on peut remplacer
+                if (det['source_model'] == 'haki' and 
+                    det['class'].lower() in strategic_pieces and
+                    det['confidence'] > used_det['confidence']):
+                    final_detections.remove(used_det)
+                    overlaps = False
                 break
         
         if not overlaps:
-            final_detections.append(gear_det)
+            final_detections.append(det)
     
     # Réassigner les IDs
     for i, det in enumerate(final_detections):
