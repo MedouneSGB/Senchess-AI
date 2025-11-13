@@ -1,6 +1,6 @@
 """
 API Flask pour la détection de pièces d'échecs avec YOLO
-Déployable sur Vercel
+Déployée sur Google Cloud Run avec CI/CD automatique
 """
 
 from flask import Flask, request, jsonify
