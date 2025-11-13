@@ -384,6 +384,9 @@ def predict_with_model(model, image_path, conf_threshold):
             confidence = float(box.conf[0])
             class_name = result.names[class_id]
             
+            # Normaliser le nom de classe (remplacer _ par -)
+            class_name = class_name.replace('_', '-')
+            
             detections.append({
                 'id': len(detections) + 1,
                 'class': class_name,
