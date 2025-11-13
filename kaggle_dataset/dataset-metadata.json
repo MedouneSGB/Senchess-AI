@@ -1,0 +1,16 @@
+{
+  "title": "Senchess Chess Pieces Dataset",
+  "id": "medounesgb/senchess-dataset",
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "keywords": [
+    "chess",
+    "computer vision",
+    "yolo",
+    "object detection",
+    "game"
+  ]
+}
