@@ -42,11 +42,15 @@ export interface ApiResponse {
 
 /**
  * Configuration de l'API
- * Remplacez par votre URL Vercel après déploiement
+ * Remplacez par votre URL Cloud Run après déploiement
  */
 const API_CONFIG = {
-  baseUrl: import.meta.env.VITE_SENCHESS_API_URL || 'http://localhost:5000',
-  apiKey: import.meta.env.VITE_MODEL_API_KEY || '', // Optionnel
+  baseUrl: typeof window !== 'undefined' && (window as any).SENCHESS_API_URL 
+    ? (window as any).SENCHESS_API_URL 
+    : 'https://senchess-api-929629832495.us-central1.run.app',
+  apiKey: typeof window !== 'undefined' && (window as any).MODEL_API_KEY 
+    ? (window as any).MODEL_API_KEY 
+    : '', // Optionnel
   timeout: 30000, // 30 secondes
 };
 

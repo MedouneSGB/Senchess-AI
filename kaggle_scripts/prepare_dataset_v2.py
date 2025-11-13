@@ -262,8 +262,8 @@ model = YOLO('best.pt')
 results = model.predict('chess_board.jpg')
 
 # Afficher les résultats
-for r in results:
-    print(f"Détecté {len(r.boxes)} pièces")
+for result in results:
+    print(f"Détecté {{len(result.boxes)}} pièces")
 ```
 
 ## 📝 Format des Annotations
