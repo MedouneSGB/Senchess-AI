@@ -101,3 +101,4 @@ api/*.log
 
 # Test files
 test_output/
+github-actions-key.json

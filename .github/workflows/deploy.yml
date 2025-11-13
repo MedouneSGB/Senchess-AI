@@ -1,0 +1,44 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'api/**'
+      - 'src/**'
+      - '.github/workflows/deploy.yml'
+
+jobs:
+  deploy:
+    name: Deploy to Cloud Run
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy senchess-api \
+            --source ./api \
+            --region us-central1 \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars "MODEL_TYPE=ensemble,USE_HUGGINGFACE=true,HUGGINGFACE_REPO_ID=MedouneSGB/senchess-models" \
+            --memory 2Gi \
+            --cpu 2 \
+            --timeout 300
+
+      - name: Get Service URL
+        run: |
+          SERVICE_URL=$(gcloud run services describe senchess-api --region us-central1 --format 'value(status.url)')
+          echo "🚀 Deployed to: $SERVICE_URL"
