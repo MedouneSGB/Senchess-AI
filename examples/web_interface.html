@@ -271,6 +271,7 @@
         <div class="model-selector">
             <button class="model-btn" data-model="haki">⚡ Haki v1.0</button>
             <button class="model-btn" data-model="gear">⚙️ Gear v1.1</button>
+            <button class="model-btn" data-model="yonko">🌊 Yonko v1.0</button>
             <button class="model-btn active" data-model="ensemble">🎯 Ensemble</button>
         </div>
 
@@ -418,12 +419,14 @@
             const modelEmojis = {
                 'ensemble': '🎯',
                 'gear': '⚙️',
-                'haki': '⚡'
+                'haki': '⚡',
+                'yonko': '🌊'
             };
             const modelNames = {
                 'ensemble': 'Ensemble',
                 'gear': 'Gear',
-                'haki': 'Haki'
+                'haki': 'Haki',
+                'yonko': 'Yonko'
             };
             const emoji = modelEmojis[data.model_used.toLowerCase()] || '🤖';
             const modelName = modelNames[data.model_used.toLowerCase()] || data.model_used;

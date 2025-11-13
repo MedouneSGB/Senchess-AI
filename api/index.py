@@ -20,12 +20,13 @@ CORS(app)  # Permettre les requêtes cross-origin
 
 # Configuration des modèles
 HUGGINGFACE_REPO = os.environ.get('HUGGINGFACE_REPO_ID', 'MedouneSGB/senchess-models')
-MODEL_TYPE = os.environ.get('MODEL_TYPE', 'gear')  # 'gear', 'haki', ou 'ensemble'
+MODEL_TYPE = os.environ.get('MODEL_TYPE', 'gear')  # 'gear', 'haki', 'yonko', ou 'ensemble'
 USE_HUGGINGFACE = os.environ.get('USE_HUGGINGFACE', 'true').lower() == 'true'
 
 # Variables globales pour les modèles
 model_gear = None
 model_haki = None
+model_yonko = None
 
 def download_model_from_huggingface(model_name):
     """Télécharge un modèle depuis Hugging Face Hub"""
@@ -52,7 +53,7 @@ def download_model_from_huggingface(model_name):
 
 def load_model():
     """Charge le(s) modèle(s) YOLO"""
-    global model_gear, model_haki
+    global model_gear, model_haki, model_yonko
     
     try:
         if USE_HUGGINGFACE:
@@ -70,6 +71,12 @@ def load_model():
                 if haki_path:
                     model_haki = YOLO(haki_path)
                     print("✅ Modèle Haki chargé")
+            
+            if MODEL_TYPE in ['yonko', 'ensemble']:
+                yonko_path = download_model_from_huggingface('yonko_v1.0.pt')
+                if yonko_path:
+                    model_yonko = YOLO(yonko_path)
+                    print("✅ Modèle Yonko chargé")
         
         else:
             # Charger depuis fichiers locaux (pour développement local)
@@ -77,6 +84,7 @@ def load_model():
             
             gear_local = 'models/senchess_gear_v1.1/weights/best.pt'
             haki_local = 'models/senchess_haki_v1.0/weights/best.pt'
+            yonko_local = 'models/senchess_yonko_v1.0/weights/best.pt'
             
             if MODEL_TYPE in ['gear', 'ensemble'] and os.path.exists(gear_local):
                 model_gear = YOLO(gear_local)
@@ -85,9 +93,13 @@ def load_model():
             if MODEL_TYPE in ['haki', 'ensemble'] and os.path.exists(haki_local):
                 model_haki = YOLO(haki_local)
                 print(f"✅ Modèle Haki chargé depuis: {haki_local}")
+            
+            if MODEL_TYPE in ['yonko', 'ensemble'] and os.path.exists(yonko_local):
+                model_yonko = YOLO(yonko_local)
+                print(f"✅ Modèle Yonko chargé depuis: {yonko_local}")
         
         # Vérifier qu'au moins un modèle est chargé
-        if model_gear is None and model_haki is None:
+        if model_gear is None and model_haki is None and model_yonko is None:
             print("⚠️ Aucun modèle chargé - utilisation d'un modèle par défaut")
             model_gear = YOLO('yolov8n.pt')
             print("⚠️ Modèle par défaut chargé (yolov8n)")
@@ -96,6 +108,7 @@ def load_model():
         print(f"❌ Erreur lors du chargement du modèle: {e}")
         model_gear = None
         model_haki = None
+        model_yonko = None
 
 def pieces_to_fen(detections, image_width, image_height):
     """
@@ -198,10 +211,11 @@ def health():
     """Vérifier l'état de l'API et du modèle"""
     models_loaded = {
         'gear': model_gear is not None,
-        'haki': model_haki is not None
+        'haki': model_haki is not None,
+        'yonko': model_yonko is not None
     }
     
-    any_loaded = model_gear is not None or model_haki is not None
+    any_loaded = model_gear is not None or model_haki is not None or model_yonko is not None
     
     return jsonify({
         'status': 'healthy' if any_loaded else 'model_not_loaded',
@@ -221,7 +235,7 @@ def predict():
     - image_url: URL d'une image
     - image_base64: image encodée en base64
     - conf: seuil de confiance (optionnel, défaut 0.25)
-    - model: 'gear', 'haki' ou 'ensemble' (optionnel, utilise MODEL_TYPE par défaut)
+    - model: 'gear', 'haki', 'yonko' ou 'ensemble' (optionnel, utilise MODEL_TYPE par défaut)
     
     Retourne:
     - fen: notation FEN de la position
@@ -230,7 +244,7 @@ def predict():
     - detectedPieces: nombre de pièces détectées
     """
     # Vérifier qu'au moins un modèle est chargé
-    if model_gear is None and model_haki is None:
+    if model_gear is None and model_haki is None and model_yonko is None:
         return jsonify({
             'error': 'Modèle non chargé',
             'message': 'Aucun modèle YOLO n\'a pu être chargé'
@@ -292,14 +306,23 @@ def predict():
         if requested_model == 'ensemble' and model_gear and model_haki:
             # Mode ensemble : utiliser les deux modèles
             detections = predict_ensemble(tmp_path, conf_threshold)
+        elif requested_model == 'yonko' and model_yonko:
+            # Utiliser Yonko
+            detections = predict_with_model(model_yonko, tmp_path, conf_threshold)
         elif requested_model == 'haki' and model_haki:
             # Utiliser Haki
             detections = predict_with_model(model_haki, tmp_path, conf_threshold)
+        elif requested_model == 'gear' and model_gear:
+            # Utiliser Gear
+            detections = predict_with_model(model_gear, tmp_path, conf_threshold)
+        elif model_yonko:
+            # Fallback sur Yonko si disponible
+            detections = predict_with_model(model_yonko, tmp_path, conf_threshold)
         elif model_gear:
-            # Utiliser Gear (par défaut)
+            # Fallback sur Gear
             detections = predict_with_model(model_gear, tmp_path, conf_threshold)
         elif model_haki:
-            # Fallback sur Haki si Gear n'est pas disponible
+            # Fallback sur Haki si les autres ne sont pas disponibles
             detections = predict_with_model(model_haki, tmp_path, conf_threshold)
         
         # Nettoyer le fichier temporaire
