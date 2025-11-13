@@ -405,10 +405,11 @@ def predict_with_model(model, image_path, conf_threshold):
 
 def predict_ensemble(image_path, conf_threshold):
     """
-    Prédiction ensemble combinant Gear, Haki et Yonko
-    - Yonko: Robuste pour toutes les pièces (priorité si disponible)
+    Prédiction ensemble combinant Gear et Haki
     - Gear: Précis pour toutes les pièces
     - Haki: Spécialisé pour les pièces stratégiques (King, Queen, Rook, Bishop)
+    
+    Note: Yonko désactivé temporairement car détections non fiables
     """
     strategic_pieces = [
         'king', 'queen', 'rook', 'bishop',
@@ -418,20 +419,20 @@ def predict_ensemble(image_path, conf_threshold):
     
     all_detections = []
     
-    # 1. Prédictions Yonko (si disponible - modèle le plus robuste)
-    if model_yonko:
-        yonko_detections = predict_with_model(model_yonko, image_path, conf_threshold)
-        all_detections.append(('yonko', yonko_detections))
-    
-    # 2. Prédictions Gear (toutes les pièces)
+    # 1. Prédictions Gear (toutes les pièces)
     if model_gear:
         gear_detections = predict_with_model(model_gear, image_path, conf_threshold)
         all_detections.append(('gear', gear_detections))
     
-    # 3. Prédictions Haki (pièces stratégiques)
+    # 2. Prédictions Haki (pièces stratégiques)
     if model_haki:
         haki_detections = predict_with_model(model_haki, image_path, conf_threshold)
         all_detections.append(('haki', haki_detections))
+    
+    # 3. Yonko désactivé temporairement (détections non fiables)
+    # if model_yonko:
+    #     yonko_detections = predict_with_model(model_yonko, image_path, conf_threshold)
+    #     all_detections.append(('yonko', yonko_detections))
     
     # 4. Combiner intelligemment avec NMS (Non-Maximum Suppression)
     final_detections = []
