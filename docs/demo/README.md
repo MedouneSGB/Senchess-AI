@@ -25,7 +25,7 @@ Interface web interactive pour la détection de pièces d'échecs en temps réel
 
 - **Frontend**: HTML5, CSS3, JavaScript vanilla
 - **API**: Google Cloud Run (Flask + YOLOv8)
-- **Modèles**: Ensemble (Gear v1.1 + Haki v1.0 + Yonko v1.0)
+- **Modèles**: Ensemble (Gear v1.1 + Haki v1.0 + Yonko v1.0 + Kaido v1.0)
 
 ## 📊 Performance
 
