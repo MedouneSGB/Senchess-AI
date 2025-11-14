@@ -72,11 +72,12 @@ def load_model():
                     model_haki = YOLO(haki_path)
                     print("✅ Modèle Haki chargé")
             
-            if MODEL_TYPE in ['yonko', 'ensemble']:
-                yonko_path = download_model_from_huggingface('yonko_v1.0.pt')
-                if yonko_path:
-                    model_yonko = YOLO(yonko_path)
-                    print("✅ Modèle Yonko chargé")
+            # Yonko désactivé - détections non fiables
+            # if MODEL_TYPE in ['yonko', 'ensemble']:
+            #     yonko_path = download_model_from_huggingface('yonko_v1.0.pt')
+            #     if yonko_path:
+            #         model_yonko = YOLO(yonko_path)
+            #         print("✅ Modèle Yonko chargé")
         
         else:
             # Charger depuis fichiers locaux (pour développement local)
@@ -84,7 +85,7 @@ def load_model():
             
             gear_local = 'models/senchess_gear_v1.1/weights/best.pt'
             haki_local = 'models/senchess_haki_v1.0/weights/best.pt'
-            yonko_local = 'models/senchess_yonko_v1.0/weights/best.pt'
+            # yonko_local = 'models/senchess_yonko_v1.0/weights/best.pt'  # Désactivé
             
             if MODEL_TYPE in ['gear', 'ensemble'] and os.path.exists(gear_local):
                 model_gear = YOLO(gear_local)
@@ -94,9 +95,10 @@ def load_model():
                 model_haki = YOLO(haki_local)
                 print(f"✅ Modèle Haki chargé depuis: {haki_local}")
             
-            if MODEL_TYPE in ['yonko', 'ensemble'] and os.path.exists(yonko_local):
-                model_yonko = YOLO(yonko_local)
-                print(f"✅ Modèle Yonko chargé depuis: {yonko_local}")
+            # Yonko désactivé - détections non fiables
+            # if MODEL_TYPE in ['yonko', 'ensemble'] and os.path.exists(yonko_local):
+            #     model_yonko = YOLO(yonko_local)
+            #     print(f"✅ Modèle Yonko chargé depuis: {yonko_local}")
         
         # Vérifier qu'au moins un modèle est chargé
         if model_gear is None and model_haki is None and model_yonko is None:
@@ -303,27 +305,28 @@ def predict():
         # Choisir le modèle à utiliser
         detections = []
         
-        if requested_model == 'ensemble' and (model_gear or model_haki or model_yonko):
-            # Mode ensemble : utiliser tous les modèles disponibles
+        if requested_model == 'ensemble' and (model_gear or model_haki):
+            # Mode ensemble : utiliser Gear + Haki uniquement
             detections = predict_ensemble(tmp_path, conf_threshold)
-        elif requested_model == 'yonko' and model_yonko:
-            # Utiliser Yonko
-            detections = predict_with_model(model_yonko, tmp_path, conf_threshold)
+        elif requested_model == 'yonko':
+            # Yonko désactivé - retourner une erreur
+            os.unlink(tmp_path)
+            return jsonify({
+                'error': 'Modèle non disponible',
+                'message': 'Le modèle Yonko est temporairement désactivé (détections non fiables)'
+            }), 503
         elif requested_model == 'haki' and model_haki:
             # Utiliser Haki
             detections = predict_with_model(model_haki, tmp_path, conf_threshold)
         elif requested_model == 'gear' and model_gear:
             # Utiliser Gear
             detections = predict_with_model(model_gear, tmp_path, conf_threshold)
-        elif model_yonko:
-            # Fallback sur Yonko si disponible
-            detections = predict_with_model(model_yonko, tmp_path, conf_threshold)
+        elif model_haki:
+            # Fallback sur Haki si disponible
+            detections = predict_with_model(model_haki, tmp_path, conf_threshold)
         elif model_gear:
             # Fallback sur Gear
             detections = predict_with_model(model_gear, tmp_path, conf_threshold)
-        elif model_haki:
-            # Fallback sur Haki si les autres ne sont pas disponibles
-            detections = predict_with_model(model_haki, tmp_path, conf_threshold)
         
         # Nettoyer le fichier temporaire
         os.unlink(tmp_path)
