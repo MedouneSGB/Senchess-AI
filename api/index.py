@@ -212,10 +212,10 @@ def health():
     models_loaded = {
         'gear': model_gear is not None,
         'haki': model_haki is not None,
-        'yonko': model_yonko is not None
+        'kaido': model_kaido is not None
     }
     
-    any_loaded = model_gear is not None or model_haki is not None or model_yonko is not None
+    any_loaded = model_gear is not None or model_haki is not None or model_kaido is not None
     
     return jsonify({
         'status': 'healthy' if any_loaded else 'model_not_loaded',
