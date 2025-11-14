@@ -20,13 +20,13 @@ CORS(app)  # Permettre les requêtes cross-origin
 
 # Configuration des modèles
 HUGGINGFACE_REPO = os.environ.get('HUGGINGFACE_REPO_ID', 'MedouneSGB/senchess-models')
-MODEL_TYPE = os.environ.get('MODEL_TYPE', 'gear')  # 'gear', 'haki', 'yonko', ou 'ensemble'
+MODEL_TYPE = os.environ.get('MODEL_TYPE', 'gear')  # 'gear', 'haki', 'kaido', ou 'ensemble'
 USE_HUGGINGFACE = os.environ.get('USE_HUGGINGFACE', 'true').lower() == 'true'
 
 # Variables globales pour les modèles
 model_gear = None
 model_haki = None
-model_yonko = None
+model_kaido = None
 
 def download_model_from_huggingface(model_name):
     """Télécharge un modèle depuis Hugging Face Hub"""
@@ -72,12 +72,11 @@ def load_model():
                     model_haki = YOLO(haki_path)
                     print("✅ Modèle Haki chargé")
             
-            # Yonko désactivé - détections non fiables
-            # if MODEL_TYPE in ['yonko', 'ensemble']:
-            #     yonko_path = download_model_from_huggingface('yonko_v1.0.pt')
-            #     if yonko_path:
-            #         model_yonko = YOLO(yonko_path)
-            #         print("✅ Modèle Yonko chargé")
+            if MODEL_TYPE in ['kaido', 'ensemble']:
+                kaido_path = download_model_from_huggingface('kaido_v1.0.pt')
+                if kaido_path:
+                    model_kaido = YOLO(kaido_path)
+                    print("✅ Modèle Kaido chargé")
         
         else:
             # Charger depuis fichiers locaux (pour développement local)
@@ -85,7 +84,7 @@ def load_model():
             
             gear_local = 'models/senchess_gear_v1.1/weights/best.pt'
             haki_local = 'models/senchess_haki_v1.0/weights/best.pt'
-            # yonko_local = 'models/senchess_yonko_v1.0/weights/best.pt'  # Désactivé
+            kaido_local = 'models/senchess_kaido_v1.0/weights/best.pt'
             
             if MODEL_TYPE in ['gear', 'ensemble'] and os.path.exists(gear_local):
                 model_gear = YOLO(gear_local)
@@ -95,13 +94,12 @@ def load_model():
                 model_haki = YOLO(haki_local)
                 print(f"✅ Modèle Haki chargé depuis: {haki_local}")
             
-            # Yonko désactivé - détections non fiables
-            # if MODEL_TYPE in ['yonko', 'ensemble'] and os.path.exists(yonko_local):
-            #     model_yonko = YOLO(yonko_local)
-            #     print(f"✅ Modèle Yonko chargé depuis: {yonko_local}")
+            if MODEL_TYPE in ['kaido', 'ensemble'] and os.path.exists(kaido_local):
+                model_kaido = YOLO(kaido_local)
+                print(f"✅ Modèle Kaido chargé depuis: {kaido_local}")
         
         # Vérifier qu'au moins un modèle est chargé
-        if model_gear is None and model_haki is None and model_yonko is None:
+        if model_gear is None and model_haki is None and model_kaido is None:
             print("⚠️ Aucun modèle chargé - utilisation d'un modèle par défaut")
             model_gear = YOLO('yolov8n.pt')
             print("⚠️ Modèle par défaut chargé (yolov8n)")
@@ -305,22 +303,21 @@ def predict():
         # Choisir le modèle à utiliser
         detections = []
         
-        if requested_model == 'ensemble' and (model_gear or model_haki):
-            # Mode ensemble : utiliser Gear + Haki uniquement
+        if requested_model == 'ensemble' and (model_gear or model_haki or model_kaido):
+            # Mode ensemble : utiliser Gear + Haki + Kaido
             detections = predict_ensemble(tmp_path, conf_threshold)
-        elif requested_model == 'yonko':
-            # Yonko désactivé - retourner une erreur
-            os.unlink(tmp_path)
-            return jsonify({
-                'error': 'Modèle non disponible',
-                'message': 'Le modèle Yonko est temporairement désactivé (détections non fiables)'
-            }), 503
+        elif requested_model == 'kaido' and model_kaido:
+            # Utiliser Kaido
+            detections = predict_with_model(model_kaido, tmp_path, conf_threshold)
         elif requested_model == 'haki' and model_haki:
             # Utiliser Haki
             detections = predict_with_model(model_haki, tmp_path, conf_threshold)
         elif requested_model == 'gear' and model_gear:
             # Utiliser Gear
             detections = predict_with_model(model_gear, tmp_path, conf_threshold)
+        elif model_kaido:
+            # Fallback sur Kaido si disponible
+            detections = predict_with_model(model_kaido, tmp_path, conf_threshold)
         elif model_haki:
             # Fallback sur Haki si disponible
             detections = predict_with_model(model_haki, tmp_path, conf_threshold)
@@ -411,8 +408,7 @@ def predict_ensemble(image_path, conf_threshold):
     Prédiction ensemble combinant Gear et Haki
     - Gear: Précis pour toutes les pièces
     - Haki: Spécialisé pour les pièces stratégiques (King, Queen, Rook, Bishop)
-    
-    Note: Yonko désactivé temporairement car détections non fiables
+    - Kaido: Polyvalent avec excellentes performances sur tous les styles
     """
     strategic_pieces = [
         'king', 'queen', 'rook', 'bishop',
@@ -432,10 +428,10 @@ def predict_ensemble(image_path, conf_threshold):
         haki_detections = predict_with_model(model_haki, image_path, conf_threshold)
         all_detections.append(('haki', haki_detections))
     
-    # 3. Yonko désactivé temporairement (détections non fiables)
-    # if model_yonko:
-    #     yonko_detections = predict_with_model(model_yonko, image_path, conf_threshold)
-    #     all_detections.append(('yonko', yonko_detections))
+    # 3. Prédictions Kaido (polyvalent - haute précision)
+    if model_kaido:
+        kaido_detections = predict_with_model(model_kaido, image_path, conf_threshold)
+        all_detections.append(('kaido', kaido_detections))
     
     # 4. Combiner intelligemment avec NMS (Non-Maximum Suppression)
     final_detections = []
